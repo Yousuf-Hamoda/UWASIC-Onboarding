@@ -9,7 +9,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+An SPI (mode 0, write-only) is used to communicate with the PWM. IT sets five 8-bit registers which control 16 outputs, each of which can be off, static high, or 3khz PWM with a programmable cycle. 
 
 ## How to test
 
