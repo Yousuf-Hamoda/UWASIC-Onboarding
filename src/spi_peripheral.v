@@ -31,13 +31,27 @@ module spi_peripheral (
     output reg [7:0] pwm_duty_cycle
 );
 
-    reg copi_sync;
+    wire copi_sync, sclk_sync, ncs_sync;
 
-    double_ff_sync double_ff_sync_inst (
+    double_ff_sync double_ff_sync_inst1 (
+        .rst_n(rst_n),
+        .clk(clk),
+        .d(sclk),
+        .q_b(sclk_sync)
+    );
+    
+    double_ff_sync double_ff_sync_inst2 (
         .rst_n(rst_n),
         .clk(clk),
         .d(copi),
         .q_b(copi_sync)
+    );
+    
+    double_ff_sync double_ff_sync_inst3 (
+        .rst_n(rst_n),
+        .clk(clk),
+        .d(ncs),
+        .q_b(ncs_sync)
     );
     
 
@@ -59,10 +73,10 @@ module spi_peripheral (
             en_reg_pwm_7_0 <= 8'h0;
             en_reg_pwm_15_8 <= 8'h0;
             pwm_duty_cycle <= 8'h0;
-        end else if (!ncs) begin
-            sclk_prev <= sclk; 
+        end else if (!ncs_sync) begin
+            sclk_prev <= sclk_sync; 
 
-            if (sclk && !sclk_prev && count != 5'd16) begin
+            if (sclk_sync && !sclk_prev && count != 5'd16) begin
                 shift_reg <= {shift_reg[14:0], copi_sync};
                 count <= count + 5'd1;
             end
