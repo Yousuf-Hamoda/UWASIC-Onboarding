@@ -13,8 +13,14 @@ An SPI (mode 0, write-only) is used to communicate with the PWM. It sets five 8-
 
 ## How to test
 
-Explain how to use your project
+Send 16-bit SPI frames (mode 0) on ui_in[0] (SCLK), ui_in[1] (COPI) and ui_in[2] (nCS):
+1 bit R/W (1 = write), 7-bit address, 8-bit data, MSB first.
+
+- Write 0xFF to 0x00: all of uo_out goes high.
+- Write 0x01 to 0x02 and 0x80 to 0x04: uo_out[0] outputs a 3 kHz, 50% PWM signal.
+
+The cocotb tests in test/test.py cover register writes, PWM frequency, duty cycle, and the output-enable / PWM-mode interaction.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+An SPI controller, such as a microcontroller, to write the registers. Optionally LEDs or a scope on the outputs to see the PWM.
